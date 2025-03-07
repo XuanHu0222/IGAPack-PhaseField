@@ -47,7 +47,6 @@ for istep = 1:Integ.nstep+1
         uInc  = zeros(2*sizeBasis,1);
         [dofBC, valBC] = getDofBC(dirichlet, Integ.dfacto);
         dofFree = setdiff([1: 2*sizeBasis]', dofBC);  % Dirichlet boundary condition is only applied to displacement field
-        uInc(dofBC) = valBC;
 
         if miter == 0
             % ==================================================
@@ -62,6 +61,7 @@ for istep = 1:Integ.nstep+1
             KfdU = stiffUU(dofFree, dofBC);
             % ------------ Kff*DUf + Kfd*DUd = 0
             % ------------ DUf = [Kff]^(-1)*(-Kfd*DUd)
+            uInc(dofBC) = valBC;
             uInc(dofFree) = KffU \ (-KfdU*uInc(dofBC));
             tdisp(1:2*sizeBasis) = tdisp(1:2*sizeBasis) + uInc(1:2*sizeBasis);
             % ==================================================
@@ -137,7 +137,7 @@ for istep = 1:Integ.nstep+1
         end
 
         miter = miter + 1;
-        clear stiffUU fintUU stiffPhiPhi fextPhi
+        % clear stiffUU fintUU stiffPhiPhi fextPhi
         % [solPhiPatch] = transferFieldGlob2Loc(PHTelem,dimBasis,solPhi);
         solUPhi = reshape(tdisp, sizeBasis, 3);
         solPatch = transferFieldGlob2Loc(PHTelem,dimBasis,solUPhi);
@@ -173,7 +173,7 @@ for istep = 1:Integ.nstep+1
             % tdisp(2*sizeBasis+1:end) = solPhi;
             solUPhi = transferFieldLoc2Glob(PHTelem,sizeBasis,solPatch);
             tdisp = reshape(solUPhi, 3*sizeBasis, 1);
-            
+
         end
     end
 

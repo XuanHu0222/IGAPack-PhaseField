@@ -19,7 +19,7 @@ geometry.toler = 1e-4;
 geometry.ngaussX = geometry.p+1;
 geometry.ngaussY = geometry.q+1;
 geometry.maxRefLevel = 6; % Change the maximum refine level to 3
-geometry.threshPhi = 0.7; % Threshold for Refinement 
+geometry.threshPhi = 0.5; % Threshold for Refinement 
 geometry.B = 2e1;% Parameter for initial history function
 
 % Material properties
