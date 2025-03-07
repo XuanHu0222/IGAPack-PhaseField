@@ -59,7 +59,8 @@ while keepChecking
             end
         end
     end
-    disp(['Extra elements refined: ',num2str(extraElemCounter)]);
+    fprintf('        Extra elements refined: %5d.\n', extraElemCounter);
+    % disp(['Extra elements refined: ',num2str(extraElemCounter)]);
 end
 
 

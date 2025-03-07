@@ -1,11 +1,10 @@
-function fenerg = internalForces_Xuan(PHTelem,dgdx,tdisp,geometry,Mater,Fract, fenerg)
+function fenerg = internalForces_Xuan(PHTelem,dgdx,shape,tdisp,geometry,Mater,Fract,fenerg)
 % Compute the circumferential stress
 
 dim = geometry.dim;
 nstress = geometry.nstress;
 
 elementCounter = 0;
-
 for indexPatch = 1:length(PHTelem)
     for i=1:length(PHTelem{indexPatch})
         if isempty(PHTelem{indexPatch}(i).children)
@@ -14,8 +13,8 @@ for indexPatch = 1:length(PHTelem)
             sctrx = PHTelem{indexPatch}(i).nodesGlobal(1:nument);
             dsctrx = reshape([2*sctrx-1;2*sctrx],1,dim*nument);
             dispElmt = tdisp(dsctrx);
-            nnode = numel(tdisp) / 3;
-            phiElmt = tdisp(nnode+sctrx);
+            sizeBasis = numel(tdisp) / 3;
+            phiElmt = tdisp(2*sizeBasis+sctrx);
 
             % Calculate strains and stresses at integration points
             kgauss=0;
@@ -23,8 +22,9 @@ for indexPatch = 1:length(PHTelem)
                 for jj=1:geometry.ngaussY
                     kgauss=kgauss+1;
                     
+                    phigp = phiElmt'*shape{elementCounter}(kgauss,:)';
                     dforce = 0.0;
-                    if (phiElmt(kgauss) >= exp(-Fract.alpha)) && (phiElmt(kgauss) <= Fract.phicr) 
+                    if (phigp >= exp(-Fract.alpha)) && (phigp <= Fract.phicr) 
                         [Bu,Bphi,~]=strainGrad(dgdx{elementCounter},nument,nstress,dim,kgauss,Mater.C);
                         strainElmt = Bu*dispElmt;
                         stressElmt = Mater.C*strainElmt;
@@ -35,7 +35,7 @@ for indexPatch = 1:length(PHTelem)
                         stre_tt = 0.5 * (stre_tt + abs(stre_tt));
                         dforce = 2.0*pi / Mater.E_frac * stre_tt^2;
                     end
-                    dforce = max(dforce, real(fenerg(elementCounter,kgauss))) + 1j*dforce;
+                    dforce = max(dforce, fenerg(elementCounter,kgauss));
                     fenerg(elementCounter,kgauss) = dforce;
                 end %igaus
             end %jgaus

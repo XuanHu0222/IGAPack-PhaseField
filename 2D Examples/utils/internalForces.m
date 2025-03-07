@@ -1,4 +1,4 @@
-function fenerg = internalForces_Xuan(PHTelem,dgdx,tdisp,geometry,Mater,fenerg)
+function fenerg = internalForces(PHTelem,dgdx,tdisp,geometry,Mater,fenerg)
 % Compute the decomposed stress
 
 dim = geometry.dim;

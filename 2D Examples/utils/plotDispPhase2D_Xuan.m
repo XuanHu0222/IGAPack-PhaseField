@@ -113,7 +113,7 @@ for indexPatch = 1:length(PHTelem)
                     
                     % Calculate stress values
                     stressvect{jj,ii} = Mater.C*Bu*tdisp(dsctrx);
-                    stressTT{jj,ii} = imag(fenerg(elementCounter, kgauss));
+                    stressTT{jj,ii} = real(fenerg(elementCounter, kgauss));
                     
                     %calculate phase field values
                     wmatx(jj,ii) = wmatx(jj,ii) + RR'*tdisp(2*sizeBasis+sctrx);
@@ -152,7 +152,7 @@ plot3 = subplot(2,2,3);
 cla(plot3)
 trisurf(vIEN,physcoord(:,1)+dispcoord(:,1)*factor, physcoord(:,2)+dispcoord(:,2)*factor, zeros(size(physcoord,1),1), sigmacoord, 'EdgeColor','none','facecolor','interp')
 view(0,90)
-title('Displacements and \sigma_{VM}')
+title('Displacements and \sigma_{\theta\theta}')
 colorbar('vert')
 colormap('parula')
 hold on
